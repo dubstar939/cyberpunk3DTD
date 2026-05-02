@@ -242,7 +242,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
         {/* Title */}
         <div className="text-center mb-3">
           <div className="text-[11px] tracking-[0.6em] text-cyan-300 font-mono mb-2 animate-pulse">
-            // YEAR 3500AD — ARCOLOGY DEFENSE PROTOCOL
+             YEAR 3500AD — ARCOLOGY DEFENSE PROTOCOL
           </div>
           <h1
             className="text-7xl md:text-8xl font-black tracking-tight leading-none"
@@ -254,6 +254,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
             }}
           >
             Z3R0 C00L
+            939PRO STUDIO
           </h1>
           <div className="mt-2 flex items-center justify-center gap-3 text-cyan-200/80 font-mono text-xs tracking-[0.3em]">
             <span>100 WAVES</span>
@@ -436,7 +437,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
         </div>
 
         <div className="mt-3 text-[10px] text-white/30 font-mono tracking-widest">
-          v1.0 · NEON BASTION CORE :: SYSTEM READY
+          v1.0 · Z3R0 C00L:: SYSTEM READY
         </div>
       </div>
     </div>
