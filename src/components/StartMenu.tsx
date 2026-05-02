@@ -242,7 +242,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
         {/* Title */}
         <div className="text-center mb-3">
           <div className="text-[11px] tracking-[0.6em] text-cyan-300 font-mono mb-2 animate-pulse">
-            // YEAR 3500 — ARCOLOGY DEFENSE PROTOCOL
+            // YEAR 3500AD — ARCOLOGY DEFENSE PROTOCOL
           </div>
           <h1
             className="text-7xl md:text-8xl font-black tracking-tight leading-none"
@@ -324,7 +324,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
               <div className="border-t border-white/10 pt-4">
                 <p className="text-white/70 text-sm leading-relaxed">
                   The arcology core is humanity's last beacon. A robotic legion converges along
-                  the neon corridor in <span className="text-fuchsia-300">100 escalating waves</span>,
+                  the cyber corridor in <span className="text-fuchsia-300">100 escalating waves</span>,
                   culminating in the multi-phase <span className="text-fuchsia-300">Omega Core Titan</span>.
                   Build, upgrade, and tier-evolve seven towers to hold the line.
                 </p>
