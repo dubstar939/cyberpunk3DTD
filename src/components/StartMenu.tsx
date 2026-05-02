@@ -253,7 +253,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
               filter: "drop-shadow(0 0 30px rgba(255,43,214,0.5))",
             }}
           >
-            NEON BASTION
+            Z3R0 C00L
           </h1>
           <div className="mt-2 flex items-center justify-center gap-3 text-cyan-200/80 font-mono text-xs tracking-[0.3em]">
             <span>100 WAVES</span>
