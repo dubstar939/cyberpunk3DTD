@@ -4,6 +4,8 @@
 
 export type EnemyTrait = "stealth" | "shield" | "flying" | "emp" | "regen" | "boss";
 
+export type EnemyFaction = "rusted" | "glitch" | "biosynth";
+
 export interface EnemyDef {
   kind: string;
   name: string;
@@ -14,6 +16,10 @@ export interface EnemyDef {
   bounty: number;        // energy cores on kill
   damageToCore: number;  // lives lost if reaches core
   traits: EnemyTrait[];
+  faction: EnemyFaction; // NEW: Faction system
+  // Damage multipliers from specific tower types
+  weaknessTo?: DamageType[]; // Takes extra damage from these
+  resistantTo?: DamageType[]; // Takes reduced damage from these
   // visual
   color: number;
   emissive: number;
@@ -21,39 +27,79 @@ export interface EnemyDef {
   shape: "drone" | "walker" | "hover" | "tank" | "elite" | "titan";
 }
 
+export type DamageType =
+  | "kinetic"
+  | "energy"
+  | "emp"
+  | "explosive"
+  | "swarm"
+  | "exotic";
+
 export const ENEMIES: Record<string, EnemyDef> = {
+  // ==================== RUSTED FACTION (Mechanical, Armor-focused) ====================
   // 1-20: light drones, scouts
   scout_drone: {
     kind: "scout_drone",
     name: "Scout Drone",
     baseHp: 30, baseSpeed: 2.6, baseArmor: 0, bounty: 6, damageToCore: 1,
-    traits: [], color: 0x66e0ff, emissive: 0x00aaff, scale: 0.5, shape: "drone",
+    traits: [], faction: "rusted",
+    weaknessTo: ["emp", "explosive"], resistantTo: ["kinetic"],
+    color: 0x66e0ff, emissive: 0x00aaff, scale: 0.5, shape: "drone",
   },
   light_drone: {
     kind: "light_drone",
     name: "Light Drone",
     baseHp: 55, baseSpeed: 2.2, baseArmor: 1, bounty: 8, damageToCore: 1,
-    traits: [], color: 0x88ccff, emissive: 0x0099ff, scale: 0.55, shape: "drone",
+    traits: [], faction: "rusted",
+    weaknessTo: ["emp"], resistantTo: ["kinetic", "energy"],
+    color: 0x88ccff, emissive: 0x0099ff, scale: 0.55, shape: "drone",
   },
   recon_flyer: {
     kind: "recon_flyer",
     name: "Recon Flyer",
     baseHp: 70, baseSpeed: 3.0, baseArmor: 0, bounty: 10, damageToCore: 1,
-    traits: ["flying"], color: 0x00ffd5, emissive: 0x00ffaa, scale: 0.55, shape: "drone",
+    traits: ["flying"], faction: "rusted",
+    weaknessTo: ["emp", "explosive"],
+    color: 0x00ffd5, emissive: 0x00ffaa, scale: 0.55, shape: "drone",
   },
 
-  // 21-40: armored walkers, shielded bots
+  // 21-40: armored walkers
   walker: {
     kind: "walker",
     name: "Armored Walker",
     baseHp: 220, baseSpeed: 1.5, baseArmor: 6, bounty: 14, damageToCore: 1,
-    traits: [], color: 0xff7733, emissive: 0xff3300, scale: 0.75, shape: "walker",
+    traits: [], faction: "rusted",
+    weaknessTo: ["explosive", "exotic"], resistantTo: ["kinetic", "energy"],
+    color: 0xff7733, emissive: 0xff3300, scale: 0.75, shape: "walker",
   },
+
+  // 61-80: heavy tanks
+  heavy_tank: {
+    kind: "heavy_tank",
+    name: "Heavy Tank",
+    baseHp: 900, baseSpeed: 1.1, baseArmor: 14, bounty: 35, damageToCore: 2,
+    traits: [], faction: "rusted",
+    weaknessTo: ["exotic", "explosive"], resistantTo: ["kinetic", "energy", "emp"],
+    color: 0xaa3333, emissive: 0xff2222, scale: 1.0, shape: "tank",
+  },
+  laser_crawler: {
+    kind: "laser_crawler",
+    name: "Laser Crawler",
+    baseHp: 700, baseSpeed: 1.4, baseArmor: 8, bounty: 32, damageToCore: 2,
+    traits: ["regen"], faction: "rusted",
+    weaknessTo: ["emp", "exotic"], resistantTo: ["energy"],
+    color: 0xff44aa, emissive: 0xff0077, scale: 0.9, shape: "tank",
+  },
+
+  // ==================== GLITCH FACTION (Digital, Shield/Energy-focused) ====================
+  // 21-40: shielded bots
   shield_bot: {
     kind: "shield_bot",
     name: "Shielded Bot",
     baseHp: 200, baseSpeed: 1.6, baseArmor: 3, shield: 200, bounty: 18, damageToCore: 1,
-    traits: ["shield"], color: 0x66aaff, emissive: 0x3366ff, scale: 0.8, shape: "walker",
+    traits: ["shield"], faction: "glitch",
+    weaknessTo: ["emp", "kinetic"], resistantTo: ["energy", "exotic"],
+    color: 0x66aaff, emissive: 0x3366ff, scale: 0.8, shape: "walker",
   },
 
   // 41-60: hover mechs, EMP units
@@ -61,49 +107,48 @@ export const ENEMIES: Record<string, EnemyDef> = {
     kind: "hover_mech",
     name: "Hover Mech",
     baseHp: 380, baseSpeed: 2.0, baseArmor: 4, bounty: 22, damageToCore: 1,
-    traits: ["flying"], color: 0xb066ff, emissive: 0x9933ff, scale: 0.85, shape: "hover",
+    traits: ["flying"], faction: "glitch",
+    weaknessTo: ["emp", "swarm"], resistantTo: ["energy"],
+    color: 0xb066ff, emissive: 0x9933ff, scale: 0.85, shape: "hover",
   },
   emp_unit: {
     kind: "emp_unit",
     name: "EMP Unit",
     baseHp: 320, baseSpeed: 1.7, baseArmor: 2, bounty: 24, damageToCore: 2,
-    traits: ["emp"], color: 0xffee00, emissive: 0xffaa00, scale: 0.8, shape: "hover",
+    traits: ["emp"], faction: "glitch",
+    weaknessTo: ["kinetic", "swarm"], resistantTo: ["emp", "energy"],
+    color: 0xffee00, emissive: 0xffaa00, scale: 0.8, shape: "hover",
   },
 
-  // 61-80: heavy tanks, laser crawlers
-  heavy_tank: {
-    kind: "heavy_tank",
-    name: "Heavy Tank",
-    baseHp: 900, baseSpeed: 1.1, baseArmor: 14, bounty: 35, damageToCore: 2,
-    traits: [], color: 0xaa3333, emissive: 0xff2222, scale: 1.0, shape: "tank",
-  },
-  laser_crawler: {
-    kind: "laser_crawler",
-    name: "Laser Crawler",
-    baseHp: 700, baseSpeed: 1.4, baseArmor: 8, bounty: 32, damageToCore: 2,
-    traits: ["regen"], color: 0xff44aa, emissive: 0xff0077, scale: 0.9, shape: "tank",
-  },
-
-  // 81-99: elite AI war machines, stealth
+  // 81-99: elite war machines
   elite_war_machine: {
     kind: "elite_war_machine",
     name: "Elite War Machine",
     baseHp: 1700, baseSpeed: 1.4, baseArmor: 20, shield: 600, bounty: 55, damageToCore: 3,
-    traits: ["shield", "regen"], color: 0xff2244, emissive: 0xff0033, scale: 1.05, shape: "elite",
+    traits: ["shield", "regen"], faction: "glitch",
+    weaknessTo: ["exotic", "emp"], resistantTo: ["kinetic", "energy", "explosive"],
+    color: 0xff2244, emissive: 0xff0033, scale: 1.05, shape: "elite",
   },
   stealth_unit: {
     kind: "stealth_unit",
     name: "Stealth Unit",
     baseHp: 1100, baseSpeed: 2.4, baseArmor: 6, bounty: 50, damageToCore: 2,
-    traits: ["stealth"], color: 0x223355, emissive: 0x6688ff, scale: 0.85, shape: "elite",
+    traits: ["stealth"], faction: "glitch",
+    weaknessTo: ["explosive", "energy"], resistantTo: ["kinetic", "emp"],
+    color: 0x223355, emissive: 0x6688ff, scale: 0.85, shape: "elite",
   },
 
-  // 100: boss
+  // ==================== BIOSYNTH FACTION (Organic, Regen/Speed-focused) ====================
+  // Future expansion: bio-mechanical enemies with regen and swarm behaviors
+
+  // ==================== BOSS ====================
   omega_titan: {
     kind: "omega_titan",
     name: "Omega Core Titan",
     baseHp: 60000, baseSpeed: 0.7, baseArmor: 35, shield: 25000, bounty: 5000, damageToCore: 50,
-    traits: ["boss", "shield", "regen"], color: 0xff00aa, emissive: 0xff00ff, scale: 2.4, shape: "titan",
+    traits: ["boss", "shield", "regen"], faction: "glitch",
+    weaknessTo: ["exotic"], resistantTo: ["kinetic", "energy", "emp", "explosive", "swarm"],
+    color: 0xff00aa, emissive: 0xff00ff, scale: 2.4, shape: "titan",
   },
 };
 
