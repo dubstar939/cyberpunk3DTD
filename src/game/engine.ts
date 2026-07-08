@@ -1458,7 +1458,34 @@ export class GameEngine {
   dispose() {
     cancelAnimationFrame(this.rafId);
     this.resizeObs?.disconnect();
+    
+    // Dispose all geometries and materials
+    this.scene.traverse((obj) => {
+      if ((obj as any).isMesh) {
+        const mesh = obj as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach(m => m.dispose());
+        } else if (mesh.material) {
+          mesh.material.dispose();
+        }
+      }
+      if ((obj as any).isPoints) {
+        const points = obj as THREE.Points;
+        if (points.geometry) points.geometry.dispose();
+        if (points.material) points.material.dispose();
+      }
+    });
+    
+    // Clear arrays
+    this.enemies = [];
+    this.towers = [];
+    this.projectiles = [];
+    this.projectilePool = [];
+    this.enemyPool.clear();
+    
     this.renderer.dispose();
     this.renderer.domElement.remove();
+    this.scene.clear();
   }
 }
