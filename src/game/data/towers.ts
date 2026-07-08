@@ -39,6 +39,14 @@ export interface TowerLevelStats {
   empStunDuration?: number;
   evolved?: boolean;     // level 5 marker
   evolvedName?: string;
+  // NEW: Branching upgrade path choice at level 3
+  branchChoice?: {
+    id: string;
+    name: string;
+    description: string;
+    effect: string;
+  }[];
+  activeBranch?: string; // which branch was chosen (set at runtime)
 }
 
 export interface TowerDef {
@@ -139,6 +147,11 @@ export const TOWERS: Record<TowerKind, TowerDef> = {
         slowDuration: 2,
         empStunDuration: 0.45,
         splashRadius: 3.8,
+        special: "CHOOSE SPECIALIZATION",
+        branchChoice: [
+          { id: "stasis", name: "Stasis Field", description: "Maximize crowd control", effect: "+15% slow, +0.3s stun" },
+          { id: "overload", name: "Energy Overload", description: "Damage shields & armor", effect: "+50% dmg vs shields, -8 armor" },
+        ],
       }),
       lvl(4, 160, 16, 11, 1.6, {
         slowPct: 0.55,
@@ -171,7 +184,16 @@ export const TOWERS: Record<TowerKind, TowerDef> = {
     levels: [
       lvl(1, 120, 35, 9, 0.7, { splashRadius: 2.4 }),
       lvl(2, 90, 55, 10, 0.8, { splashRadius: 2.6 }),
-      lvl(3, 150, 90, 11, 0.9, { splashRadius: 3.0, burnDps: 8, burnDuration: 2 }),
+      lvl(3, 150, 90, 11, 0.9, { 
+        splashRadius: 3.0, 
+        burnDps: 8, 
+        burnDuration: 2,
+        special: "CHOOSE SPECIALIZATION",
+        branchChoice: [
+          { id: "inferno", name: "Inferno Round", description: "Wider devastation", effect: "+40% blast radius" },
+          { id: "meltdown", name: "Core Meltdown", description: "Longer burning", effect: "+100% burn duration, +15 DPS" },
+        ],
+      }),
       lvl(4, 220, 145, 12, 1.0, { splashRadius: 3.4, burnDps: 18, burnDuration: 2.5 }),
       lvl(5, 380, 260, 14, 1.2, {
         special: "PLASMA SIEGE — earthshaker rounds",
@@ -218,7 +240,16 @@ export const TOWERS: Record<TowerKind, TowerDef> = {
     levels: [
       lvl(1, 100, 6, 8, 3.0, { burnDps: 6, burnDuration: 3, chainTargets: 1 }),
       lvl(2, 80, 9, 8.5, 3.5, { burnDps: 10, burnDuration: 3.5, chainTargets: 2 }),
-      lvl(3, 130, 14, 9, 4.0, { burnDps: 16, burnDuration: 4, chainTargets: 3 }),
+      lvl(3, 130, 14, 9, 4.0, { 
+        burnDps: 16, 
+        burnDuration: 4, 
+        chainTargets: 3,
+        special: "CHOOSE SPECIALIZATION",
+        branchChoice: [
+          { id: "virulent", name: "Virulent Strain", description: "Deadly DoT", effect: "+50% burn DPS" },
+          { id: "proliferate", name: "Proliferation", description: "More drones", effect: "+3 chain targets" },
+        ],
+      }),
       lvl(4, 200, 22, 10, 4.5, { burnDps: 26, burnDuration: 4, chainTargets: 4 }),
       lvl(5, 360, 40, 12, 5.5, {
         special: "OMEGA HIVE — relentless swarm",
