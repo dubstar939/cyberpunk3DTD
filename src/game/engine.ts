@@ -18,8 +18,8 @@ import type { Stats } from "./types";
 // Tags are applied in factory.ts when the mesh is built.
 function animateTaggedParts(root: THREE.Object3D, dt: number, t: number) {
   root.traverse((c) => {
-    const ud: any = (c as any).userData;
-    if (!ud) return;
+    const ud = c.userData;
+    if (!ud.spinSpeed && !ud.pulse && !ud.orbit && !ud.spinChild) return;
     if (ud.spinSpeed) {
       c.rotation.z += dt * ud.spinSpeed;
     }
@@ -1074,12 +1074,13 @@ export class GameEngine {
       // damage in line
       const dir = end.clone().sub(start).setY(0).normalize();
       const hits: EnemyEntity[] = [];
+      const _v = new THREE.Vector3();
       for (const e of this.enemies) {
         if (!e.alive) continue;
-        const v = new THREE.Vector3(e.mesh.position.x - t.position.x, 0, e.mesh.position.z - t.position.z);
-        const along = v.dot(dir);
+        _v.set(e.mesh.position.x - t.position.x, 0, e.mesh.position.z - t.position.z);
+        const along = _v.dot(dir);
         if (along < 0 || along > stats.range + 6) continue;
-        const perp = v.clone().sub(dir.clone().multiplyScalar(along)).length();
+        const perp = _v.clone().sub(dir.clone().multiplyScalar(along)).length();
         if (perp < 0.6) hits.push(e);
       }
       hits.sort((a, b) => a.mesh.position.distanceToSquared(t.position) - b.mesh.position.distanceToSquared(t.position));
@@ -1370,7 +1371,12 @@ export class GameEngine {
   // ---------- pooling ----------------------------------------------
 
   private acquireProjectile(): Projectile {
-    if (this.projectilePool.length) return this.projectilePool.pop()!;
+    if (this.projectilePool.length) {
+      const p = this.projectilePool.pop()!;
+      p.pos.set(0, 0, 0);
+      p.vel.set(0, 0, 0);
+      return p;
+    }
     return {
       id: this.nextId++,
       mesh: null as any,
@@ -1380,7 +1386,7 @@ export class GameEngine {
       target: null,
       damage: 0,
       pierce: 0,
-      hitSet: new Set(),
+      hitSet: new Set<number>(),
       ttl: 0,
       homing: false,
       color: 0xffffff,
@@ -1389,7 +1395,7 @@ export class GameEngine {
   private releaseProjectile(p: Projectile) {
     p.alive = false;
     p.target = null;
-    p.hitSet = new Set();
+    p.hitSet.clear();
     if (this.projectilePool.length < 200) this.projectilePool.push(p);
   }
 
