@@ -15,22 +15,36 @@ function geo<T extends THREE.BufferGeometry>(key: string, factory: () => T): T {
   return g;
 }
 
+// Material cache to avoid creating duplicate materials
+const _matCache = new Map<string, THREE.Material>();
+function cachedMat<T extends THREE.Material>(key: string, factory: () => T): T {
+  let m = _matCache.get(key) as T | undefined;
+  if (!m) { m = factory(); _matCache.set(key, m); }
+  return m;
+}
+
 const matMetal = (color: number, em = 0, emI = 0) =>
-  new THREE.MeshStandardMaterial({
-    color, emissive: em, emissiveIntensity: emI,
-    metalness: 0.85, roughness: 0.35,
-  });
+  cachedMat(`metal-${color}-${em}-${emI}`, () =>
+    new THREE.MeshStandardMaterial({
+      color, emissive: em, emissiveIntensity: emI,
+      metalness: 0.85, roughness: 0.35,
+    })
+  );
 
 const matEmissive = (color: number, intensity = 2) =>
-  new THREE.MeshStandardMaterial({
-    color: 0xffffff, emissive: color, emissiveIntensity: intensity,
-    metalness: 0.2, roughness: 0.4,
-  });
+  cachedMat(`emissive-${color}-${intensity}`, () =>
+    new THREE.MeshStandardMaterial({
+      color: 0xffffff, emissive: color, emissiveIntensity: intensity,
+      metalness: 0.2, roughness: 0.4,
+    })
+  );
 
 const matCarbon = () =>
-  new THREE.MeshStandardMaterial({
-    color: 0x14141c, metalness: 0.9, roughness: 0.55,
-  });
+  cachedMat("carbon", () =>
+    new THREE.MeshStandardMaterial({
+      color: 0x14141c, metalness: 0.9, roughness: 0.55,
+    })
+  );
 
 // =============================================================
 // TOWER MESHES — each is a Group with a rotating "head" subgroup
