@@ -253,7 +253,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
               filter: "drop-shadow(0 0 30px rgba(255,43,214,0.5))",
             }}
           >
-            Z3R0 C00L
+            IONFRONT
             939PRO STUDIO
           </h1>
           <div className="mt-2 flex items-center justify-center gap-3 text-cyan-200/80 font-mono text-xs tracking-[0.3em]">
@@ -437,7 +437,7 @@ export function StartMenu({ onStart, onShowDocs }: Props) {
         </div>
 
         <div className="mt-3 text-[10px] text-white/30 font-mono tracking-widest">
-          v1.0 · Z3R0 C00L:: SYSTEM READY
+          v1.0 · IONFRONT:: SYSTEM READY
         </div>
       </div>
     </div>

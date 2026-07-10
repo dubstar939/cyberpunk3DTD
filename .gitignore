@@ -1,34 +1,80 @@
 ```
-# Image sprites and generated assets
-tanks_reference.png
-tanks_improved.png
-sprites_individual/
+# Dependencies
+node_modules/
 
-# Python cache
+# Build outputs
+dist/
+build/
+target/
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+env/
+venv/
+.venv/
+.ENV
+.ENV.*
+.venv.bak/
+.env.bak/
 
-# Generated files
-*.tmp
+# Logs
 *.log
 
-# Environment files
-.env
-.env.local
-*.env.*
+# Environment variables
+.env*
+!.env.example
 
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Build artifacts
-build/
-dist/
-*.o
-*.obj
-*.out
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# MyPy
+.mypy_cache/
+
+# PyTest
+.pytest_cache/
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
 ```
